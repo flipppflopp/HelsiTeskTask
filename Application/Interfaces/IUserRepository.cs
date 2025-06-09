@@ -10,10 +10,10 @@ namespace Application.Interfaces
 {
     public interface IUserRepository
     {
-        public Task<List<MongoUser>> GetAllAsync();
-        public Task<MongoUser?> GetByIdAsync(string id);
-        public Task CreateAsync(MongoUser user);
-        public Task UpdateAsync(MongoUser user);
-        public Task DeleteAsync(MongoUser user);
+        public Task<List<User>> GetAllAsync();
+        public Task<User?> GetByIdAsync(string id);
+        public Task CreateAsync(User user);
+        public Task UpdateAsync(User user);
+        public Task DeleteAsync(string id);
     }
 }

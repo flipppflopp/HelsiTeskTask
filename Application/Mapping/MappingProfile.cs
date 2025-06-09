@@ -22,6 +22,16 @@ namespace Application.Mapping
 
             CreateMap<MongoUser, User>();
             CreateMap<User, MongoUser>();
+
+
+            CreateMap<TaskListDTO, TaskList>();
+            CreateMap<TaskList, TaskListDTO>();
+
+            CreateMap<TaskListCreateDTO, TaskList>();
+            CreateMap<TaskList, TaskListCreateDTO>();
+
+            CreateMap<MongoTaskList, TaskList>();
+            CreateMap<TaskList, MongoTaskList>();
         }
     }
 }

@@ -15,6 +15,6 @@ namespace Application.Interfaces
         public Task<UserDTO?> GetByIdAsync(string id);
         public Task CreateAsync(UserCreateDTO user);
         public Task UpdateAsync(UserDTO userDTO);
-        public Task DeleteAsync(UserDTO userDTO);
+        public Task DeleteAsync(string id);
     }
 }

@@ -17,7 +17,6 @@ namespace Domain.MongoModels
         [BsonElement("name")]
         public string Name { get; set; }
 
-        [BsonRepresentation(BsonType.ObjectId)]
         public List<string> Tasks { get; set; } = new List<string>();
 
         [BsonElement("ownerUserId")]
@@ -25,5 +24,8 @@ namespace Domain.MongoModels
 
         [BsonRepresentation(BsonType.ObjectId)]
         public List<string> AllowedUserIds { get; set; } = new List<string>();
+        
+        [BsonElement("createdAt")]
+        public DateTime? CreatedAt { get; set; }
     }
 }

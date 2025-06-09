@@ -43,9 +43,9 @@ namespace HelsiTeskTask.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(UserDTO userDTO)
+        public async Task<IActionResult> Delete(string id)
         {
-            await _service.DeleteAsync(userDTO);
+            await _service.DeleteAsync(id);
             return Ok();
         }
     }

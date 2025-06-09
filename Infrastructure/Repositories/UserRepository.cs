@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using AutoMapper;
 using Domain;
 using Domain.Entities;
 using Domain.MongoModels;
@@ -15,30 +16,40 @@ namespace Infrastructure.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly IMongoCollection<MongoUser> _collection;
+        private readonly IMapper _mapper;
 
-        public UserRepository(IOptions<MongoDbSettings> options)
+        public UserRepository(IMongoCollection<MongoUser> collection, IMapper mapper)
         {
-            var settings = options.Value;
-            var client = new MongoClient(settings.ConnectionString);
-            var db = client.GetDatabase(settings.Database);
-            _collection = db.GetCollection<MongoUser>("Users");
+            _collection = collection;
+            _mapper = mapper;
         }
 
-        public async Task<List<MongoUser>> GetAllAsync()
+        public async Task<List<User>> GetAllAsync()
         {
-            return await _collection.Find(_ => true).ToListAsync();
+            List<MongoUser> mongoUsers = await _collection.Find(_ => true).ToListAsync();
+            return _mapper.Map<List<User>>(mongoUsers);
         }
 
-        public async Task<MongoUser?> GetByIdAsync(string id) =>
-            await _collection.Find(u => u.Id == id).FirstOrDefaultAsync();
+        public async Task<User> GetByIdAsync(string id)
+        {
+            MongoUser user = await _collection.Find(u => u.Id == id).FirstOrDefaultAsync();
+            return _mapper.Map<User>(user);
+        }
 
-        public async Task CreateAsync(MongoUser user) =>
-            await _collection.InsertOneAsync(user);
+        public async Task CreateAsync(User user)
+        {
+            await _collection.InsertOneAsync(_mapper.Map<MongoUser>(user));
+        }
 
-        public async Task UpdateAsync(MongoUser user) =>
-            await _collection.ReplaceOneAsync(u => u.Id == user.Id, user);
+        public async Task UpdateAsync(User user)
+        {
+            MongoUser mongoUser = _mapper.Map<MongoUser>(user);
+            await _collection.ReplaceOneAsync(u => u.Id == mongoUser.Id, mongoUser);
+        }
 
-        public async Task DeleteAsync(MongoUser user) =>
-            await _collection.DeleteOneAsync(u => u.Id == user.Id || u.Name == user.Name);
+        public async Task DeleteAsync(string id)
+        {
+            await _collection.DeleteOneAsync(u => u.Id == id);
+        }
     }
 }

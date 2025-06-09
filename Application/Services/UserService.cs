@@ -22,51 +22,30 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        private UserDTO MapFromMongoToDto(MongoUser mongoUser)
-        {
-            User user = _mapper.Map<User>(mongoUser);
-            return _mapper.Map<UserDTO>(user);
-        }
-
-        private List<UserDTO> MapFromMongoToDtoList(List<MongoUser> mongoUsers)
-        {
-            List<User> users = _mapper.Map<List<User>>(mongoUsers);
-            return _mapper.Map<List<UserDTO>>(users);
-        }
-
-        private MongoUser MapFromDtoToMongo(UserDTO userDto)
-        {
-            User user = _mapper.Map<User>(userDto);
-            return _mapper.Map<MongoUser>(user);
-        }
-
         public async Task<List<UserDTO>> GetAllAsync()
         {
-            return MapFromMongoToDtoList(await _repo.GetAllAsync());
+            return _mapper.Map<List<UserDTO>>(await _repo.GetAllAsync());
         }
 
         public async Task<UserDTO?> GetByIdAsync(string id)
         {
 
-            return MapFromMongoToDto(await _repo.GetByIdAsync(id));
+            return _mapper.Map<UserDTO?>(await _repo.GetByIdAsync(id));
         }
 
         public async Task CreateAsync(UserCreateDTO userDTO)
         {
-            User user = _mapper.Map<User>(userDTO);
-            MongoUser mongoUser = _mapper.Map<MongoUser>(user);
-
-            await _repo.CreateAsync(mongoUser);
+            await _repo.CreateAsync(_mapper.Map<User>(userDTO));
         }
 
         public async Task UpdateAsync(UserDTO userDTO)
         {
-            await _repo.UpdateAsync(MapFromDtoToMongo(userDTO));
+            await _repo.UpdateAsync(_mapper.Map<User>(userDTO));
         }
 
-        public async Task DeleteAsync(UserDTO userDTO)
+        public async Task DeleteAsync(string id)
         {
-            await _repo.DeleteAsync(MapFromDtoToMongo(userDTO));
+            await _repo.DeleteAsync(id);
         }
     }
 }
